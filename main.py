@@ -16,16 +16,16 @@ pygame.init()
 pygame.display.set_caption("Harry Potter Adaptation")
 
 XMAX = 1200
-YMAX = 600
+YMAX = 700
 
 class Item(pygame.sprite.Sprite):
     def __init__(self, image, height=50,width=50):
         super(Item, self).__init__()
         self.surf = pygame.image.load(image).convert()
         self.surf = pygame.transform.scale(self.surf,(width,height))  #self.surf.set_colorkey((255,255,255),pygame.RLEACCEL)
-        self.xloc =  randint(0,XMAX)
-        self.yloc = randint(0,YMAX)
-        self.rect = self.surf.get_rect(center=(self.xloc,self.yloc))        
+        self.xloc =  randint(20,XMAX-70)
+        self.yloc = randint(20,YMAX-70)
+        # self.rect = self.surf.get_rect(center=(self.xloc,self.yloc))        
         
     def remove_item(self):
         self.remove()
@@ -65,7 +65,7 @@ current_item = None #False
 
 
 # i = 100 #for testing
-i = 5000
+i = 3000
 current_item = Item(horcrux_list.pop())#True
 print("placing item")
 count=0
@@ -78,6 +78,8 @@ message('arial.ttf' ,40 ,"Welcome to Harry Potter Adaptation" , (50, 100), (200,
 message('arial.ttf' ,38 ,"Your nemesis has scattered the 7 horcruxes throughout the 9 worlds", (50, 150), (200, 200, 200))
 message('arial.ttf' ,40 ,"To win, you must gather all 7 before time runs out" , (50, 200), (200, 200, 200))
 message('arial.ttf' ,40 ,"Good Luck!" , (100, 250), (200, 200, 200))
+
+message('arial.ttf' ,15 ,"*Only the wizard's hand can affect the horcruxes" , (50, 350), (200, 200, 200))
 
 pygame.display.flip()
 pygame.display.update()
@@ -112,9 +114,6 @@ while run:
         else:
             location = 1
         x = XMAX-width-5
-        # if location == rand_location:
-        #     print('placing item')
-        #     current_item = Item(horcrux_list.pop())#True
     # if left arrow key is pressed
     if keys[pygame.K_RIGHT] and x < (XMAX-width):
           
@@ -127,9 +126,6 @@ while run:
             location-=1
         else:
             location = 9
-        # if location == rand_location:
-        #     print('placing item')
-        #     current_item = Item(horcrux_list.pop())#True
     # if left arrow key is pressed   
     if keys[pygame.K_UP] and y>0:
           
@@ -144,21 +140,9 @@ while run:
     background = pygame.image.load(backgrounds[location])
     scr.blit(background, [0,0])
     
-    
-    
-    if(i <= 0):
-        run = False
-        message('Inkfree.ttf' ,100 ,'You Have Failed', (300, 200), (200, 50, 50))
-    else:
-        message('Inkfree.ttf',50 ,"Time: " + str(int(i/10)), (10, 10))
-        message('Inkfree.ttf',50 ,f"Items found: {count} of 7", (10, 60),(0,0,0))
-        i-=1
-    
-    scr.blit(player, (x, y))
-    
     if rand_location == location:
-        scr.blit(current_item.surf, current_item.rect)
-        if (x>=current_item.xloc-width and x<=current_item.xloc+50) and (y>=current_item.yloc-height and y<=current_item.yloc+50):
+        scr.blit(current_item.surf, (current_item.xloc, current_item.yloc))
+        if (x>=current_item.xloc-width and x<=current_item.xloc+50) and (y<=current_item.yloc+50 and y>=current_item.yloc-height):
             current_item.remove_item()
             if(not horcrux_list):
                 current_item = None
@@ -168,12 +152,34 @@ while run:
                 print("placing item")
             rand_location = randint(1,9)
             count+=1
-
+            
         
-        if (not horcrux_list && not current_item):
+#         elif x < current_item.xloc-50:
+#             current_item.xloc+=5
+#         elif x < current_item.xloc+50:
+#             current_item.xloc-=5
+        
+        if current_item.xloc <=0 or current_item.xloc >= XMAX:
+            self.xloc = randint(20,XMAX-70)
+            self.xloc = randint(20,YMAX-70)
+        
+        if (not horcrux_list) and (not current_item):
+            scr.fill((0, 0, 0))
             message('arial.ttf' ,40 ,"You found all the horcurxes. Congrats" , (50, 100), (200, 200, 200))
             run = False
-       
+    
+    if(i <= 0):
+        run = False
+        scr.fill((0, 0, 0))
+        message('Inkfree.ttf' ,100 ,'You Have Failed', (300, 200), (200, 50, 50))
+    else:
+        message('Inkfree.ttf',50 ,"Time: " + str(int(i/10)), (10, 10))
+        message('Inkfree.ttf',50 ,f"Items found: {count} of 7", (10, 60),(0,0,0))
+        i-=1
+    
+    scr.blit(player, (x, y))
+    
+    
     
     pygame.display.flip()
     
