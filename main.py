@@ -34,13 +34,32 @@ run = True
 
 backgrounds={1:'map1.jpg',2:'map2.jpg',3:'map3.jpg',4:'map4.jpg',5:'map5.jpg',6:'map6.jpg',7:'map7.jfif',8:'map8.jpg',9:'map9.jfif'}
 location = 5
-
+def message(fontName, size,text, location, color = (0,200,0)):
+    fontObj = pygame.font.Font(fontName,size)
+    textSurface = fontObj.render(text, True, color)
+    scr.blit(textSurface, location)
 
 player = pygame.image.load('playerImage.png')
 
 scr = pygame.display.set_mode((XMAX, YMAX))
 
 # game = board.screen('Harry Potter Adaptation')
+
+# i = 100 #for testing
+i = 5000
+
+#startup
+
+message('arial.ttf' ,50 ,"Time: " + str(int(i/10)), (10, 10))
+
+message('arial.ttf' ,40 ,"Welcome to Harry Potter Adaptation" , (50, 100), (200, 200, 200))
+message('arial.ttf' ,38 ,"Your nemesis has scattered the 7 horcruxes throughout the 9 worlds", (50, 150), (200, 200, 200))
+message('arial.ttf' ,40 ,"To win, you must gather all 7 before time runs out" , (50, 200), (200, 200, 200))
+message('arial.ttf' ,40 ,"Good Luck!" , (100, 250), (200, 200, 200))
+
+pygame.display.flip()
+pygame.display.update()
+pygame.time.delay(5000)
 
 # infinite loop 
 while run:
@@ -97,10 +116,21 @@ while run:
     background = pygame.image.load(backgrounds[location])
     scr.blit(background, [0,0])
     
+    if(i <= 0):
+        run = False
+        message('Inkfree.ttf' ,100 ,'You Have Failed', (300, 200), (200, 50, 50))
+    else:
+        message('Inkfree.ttf',50 ,"Time: " + str(int(i/10)), (10, 10))
+        i-=1
+    
     scr.blit(player, (x, y))
     
     pygame.display.flip()
     
     pygame.display.update() 
     # closes the pygame window 
+    
+    if(run==False):
+        pygame.time.delay(2000)
+    
 pygame.quit()
