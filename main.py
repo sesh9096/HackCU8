@@ -142,6 +142,16 @@ while run:
     
     if rand_location == location:
         scr.blit(current_item.surf, (current_item.xloc, current_item.yloc))
+        if x > current_item.xloc-350 and x < current_item.xloc:
+            current_item.xloc+=10
+        elif x < current_item.xloc+350 and x > current_item.xloc:
+            current_item.xloc-=10
+        
+        if current_item.xloc <=0 or current_item.xloc >= XMAX:
+            rand_location = randint(1,9)
+            current_item.xloc = randint(20,XMAX-70)
+            current_item.xloc = randint(20,YMAX-70)
+            
         if (x>=current_item.xloc-width and x<=current_item.xloc+50) and (y<=current_item.yloc+50 and y>=current_item.yloc-height):
             current_item.remove_item()
             if(not horcrux_list):
@@ -152,13 +162,7 @@ while run:
                 print("placing item")
             rand_location = randint(1,9)
             count+=1
-            
-        
-#         elif x < current_item.xloc-50:
-#             current_item.xloc+=5
-#         elif x < current_item.xloc+50:
-#             current_item.xloc-=5
-        
+           
         if current_item.xloc <=0 or current_item.xloc >= XMAX:
             self.xloc = randint(20,XMAX-70)
             self.xloc = randint(20,YMAX-70)
