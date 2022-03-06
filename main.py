@@ -1,24 +1,23 @@
 # import pygame module in this program 
 import pygame
-import board
+
   
 # activate the pygame library .  
 # initiate pygame and give permission  
 # to use pygame's functionality.  
 pygame.init()
-
+  
 # create the display surface object  
-# of specific dimension..e(500, 500).  
-XMAX = 1300
-YMAX = 700
-
-win = pygame.display.set_mode((XMAX, YMAX))
-
+# of specific dimension..e(500, 500).
 
 
 # set the pygame window name 
 pygame.display.set_caption("Harry Potter Adaptation")
-  
+
+XMAX = 1200
+YMAX = 600
+
+
 # object current co-ordinates 
 x = 200
 y = 200
@@ -28,15 +27,20 @@ width = 55
 height = 77
   
 # velocity / speed of movement
-vel = 10
+vel = 20
   
 # Indicates pygame is running
 run = True
 
+backgrounds={1:'map12.jpg',2:'map22.jpg',3:'map12.jpg',4:'map22.jpg',5:'map12.jpg',6:'map22.jpg',7:'map12.jpg',8:'map22.jpg',9:'map12.jpg'}
+location = 5
+
+
 player = pygame.image.load('playerImage.png')
 
-game = board.screen('Harry Potter Adaptation')
+scr = pygame.display.set_mode((XMAX, YMAX))
 
+# game = board.screen('Harry Potter Adaptation')
 
 # infinite loop 
 while run:
@@ -62,7 +66,10 @@ while run:
         x -= vel
           
     if keys[pygame.K_LEFT] and x<=0:    
-        game.update_background('L')
+        if location!=9:
+            location+=1
+        else:
+            location = 1
         x = XMAX-width-5
         
     # if left arrow key is pressed
@@ -72,9 +79,11 @@ while run:
         x += vel
     
     if keys[pygame.K_RIGHT] and x >=(XMAX-width):
-        game.update_background('R')
         x = 5
-         
+        if location!=1:
+            location-=1
+        else:
+            location = 9
     # if left arrow key is pressed   
     if keys[pygame.K_UP] and y>0:
           
@@ -85,11 +94,12 @@ while run:
     if keys[pygame.K_DOWN] and y < (YMAX-height):
         # increment in y co-ordinate
         y += vel
-        
-    game.screen.blit(game.background, (0,0))
+    background = pygame.image.load(backgrounds[location])
+    scr.blit(background, [0,0])
     
-    game.screen.blit(player, (x, y))
+    scr.blit(player, (x, y))
     
+    pygame.display.flip()
     
     pygame.display.update() 
     # closes the pygame window 
