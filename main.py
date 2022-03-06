@@ -6,7 +6,7 @@ import board
 # initiate pygame and give permission  
 # to use pygame's functionality.  
 pygame.init()
-  
+
 # create the display surface object  
 # of specific dimension..e(500, 500).  
 win = pygame.display.set_mode((1300, 700))
@@ -61,6 +61,7 @@ while run:
           
         # increment in x co-ordinate
         x += vel
+        game.update_background('R')
          
     # if left arrow key is pressed   
     if keys[pygame.K_UP] and y>0:
@@ -72,8 +73,8 @@ while run:
     if keys[pygame.K_DOWN] and y<500-height:
         # increment in y co-ordinate
         y += vel
-    game.display_screen()
-    
+        game.update_background('L')
+    #game.display_screen()
     pygame.display.update() 
     # closes the pygame window 
     pygame.time.delay(10)
