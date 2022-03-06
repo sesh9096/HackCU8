@@ -1,7 +1,6 @@
 # import pygame module in this program 
 import pygame
-
-  
+from random import randint
 # activate the pygame library .  
 # initiate pygame and give permission  
 # to use pygame's functionality.  
@@ -17,6 +16,17 @@ pygame.display.set_caption("Harry Potter Adaptation")
 XMAX = 1200
 YMAX = 600
 
+class Item(pygame.sprite.Sprite):
+    def __init__(self, image, height=50,width=50):
+        super(Item, self).__init__()
+        self.surf = pygame.image.load(image).convert()
+        self.surf = pygame.transform.scale(self.surf,(width,height))  #self.surf.set_colorkey((255,255,255),pygame.RLEACCEL)
+        self.xloc =  randint(0,XMAX)
+        self.yloc = randint(0,YMAX)
+        self.rect = self.surf.get_rect(center=(self.xloc,self.yloc))        
+        
+    def remove_item(self):
+        self.remove()
 
 # object current co-ordinates 
 x = 200
@@ -32,8 +42,12 @@ vel = 20
 # Indicates pygame is running
 run = True
 
-backgrounds={1:'map1.jpg',2:'map2.jpg',3:'map3.jpg',4:'map4.jpg',5:'map5.jpg',6:'map6.jpg',7:'map7.jfif',8:'map8.jpg',9:'map9.jfif'}
+backgrounds={1:'map12.jpg',2:'map22.jpg',3:'map12.jpg',4:'map22.jpg',5:'map12.jpg',6:'map22.jpg',7:'map12.jpg',8:'map22.jpg',9:'map12.jpg'}
+
+horcrux_list = ['h1.png','h2.png','h3.png','h4.png','h5.png','h6.jpg','h7.png']
+
 location = 5
+
 def message(fontName, size,text, location, color = (0,200,0)):
     fontObj = pygame.font.Font(fontName,size)
     textSurface = fontObj.render(text, True, color)
@@ -43,10 +57,8 @@ player = pygame.image.load('playerImage.png')
 
 scr = pygame.display.set_mode((XMAX, YMAX))
 
-# game = board.screen('Harry Potter Adaptation')
-
-# i = 100 #for testing
 i = 5000
+count=0
 
 #startup
 
@@ -61,6 +73,9 @@ pygame.display.flip()
 pygame.display.update()
 pygame.time.delay(5000)
 
+# game = board.screen('Harry Potter Adaptation')
+rand_location = randint(1,9)
+current_item = None #False
 # infinite loop 
 while run:
     # creates time delay of 10ms 
@@ -90,10 +105,12 @@ while run:
         else:
             location = 1
         x = XMAX-width-5
-        
+        if location == rand_location:
+            print('placing item')
+            current_item = Item(horcrux_list.pop())#True
+            
     # if left arrow key is pressed
     if keys[pygame.K_RIGHT] and x < (XMAX-width):
-          
         # increment in x co-ordinate
         x += vel
     
@@ -103,9 +120,12 @@ while run:
             location-=1
         else:
             location = 9
+        if location == rand_location:
+            print('placing item')
+            current_item = Item(horcrux_list.pop())#True
+            
     # if left arrow key is pressed   
     if keys[pygame.K_UP] and y>0:
-          
         # decrement in y co-ordinate
         y -= vel
           
@@ -115,6 +135,10 @@ while run:
         y += vel
     background = pygame.image.load(backgrounds[location])
     scr.blit(background, [0,0])
+    if current_item!=None:
+        scr.blit(current_item.surf, current_item.rect)
+    
+    scr.blit(player, (x, y))
     
     if(i <= 0):
         run = False
@@ -123,14 +147,23 @@ while run:
         message('Inkfree.ttf',50 ,"Time: " + str(int(i/10)), (10, 10))
         i-=1
     
-    scr.blit(player, (x, y))
-    
     pygame.display.flip()
+
     
-    pygame.display.update() 
-    # closes the pygame window 
+    if (current_item is not None) and (x>=current_item.xloc-25 and x<=current_item.xloc+100) and (y>=current_item.yloc-25 and y<=current_item.yloc+100):
+        current_item.remove_item()
+        current_item = None
+        rand_location = randint(1,9)
+        count+=1
+        
+    message('Inkfree.ttf',50 ,f"Items found: {count} of 7", (10, 60),(0,0,0))
+    if not horcrux_list:
+        message('arial.ttf' ,40 ,"You found all the horcurxes. Congrats" , (50, 100), (200, 200, 200))
+        run = False
+       
+    pygame.display.update()
     
     if(run==False):
         pygame.time.delay(2000)
-    
+    # closes the pygame window 
 pygame.quit()
