@@ -32,7 +32,7 @@ vel = 20
 # Indicates pygame is running
 run = True
 
-backgrounds={1:'map12.jpg',2:'map22.jpg',3:'map12.jpg',4:'map22.jpg',5:'map12.jpg',6:'map22.jpg',7:'map12.jpg',8:'map22.jpg',9:'map12.jpg'}
+backgrounds={1:'map1.jpg',2:'map2.jpg',3:'map3.jpg',4:'map4.jpg',5:'map5.jpg',6:'map6.jpg',7:'map7.jfif',8:'map8.jpg',9:'map9.jfif'}
 location = 5
 
 
